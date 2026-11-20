@@ -1,0 +1,1308 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Revista Al Paso | Noticias y Vitrina de Emprendedores y Artistas</title>
+  <meta name="description" content="Revista Digital Al Paso: noticias locales, nacionales e internacionales en equilibrio 50/50 con publicidad de impacto para emprendedores nuevos y lanzamientos musicales." />
+  
+  <!-- Fuente Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Tone.js para vista previa musical interactiva de artistas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              dark: '#0B1120',
+              navy: '#111827',
+              red: '#E11D48',
+              amber: '#F59E0B',
+              emerald: '#10B981'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+    /* Animación sutil para el ticker de última hora */
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.25); }
+    }
+    .live-dot {
+      animation: pulseDot 1.8s infinite ease-in-out;
+    }
+    /* Barras de ecualizador animadas para artistas */
+    @keyframes eqBar {
+      0%, 100% { height: 25%; }
+      50% { height: 100%; }
+    }
+    .eq-playing span:nth-child(1) { animation: eqBar 0.6s infinite ease-in-out; }
+    .eq-playing span:nth-child(2) { animation: eqBar 0.45s infinite ease-in-out 0.15s; }
+    .eq-playing span:nth-child(3) { animation: eqBar 0.7s infinite ease-in-out 0.3s; }
+    .eq-playing span:nth-child(4) { animation: eqBar 0.5s infinite ease-in-out 0.1s; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased selection:bg-rose-600 selection:text-white">
+
+  <!-- BARRA SUPERIOR DE ÚLTIMA HORA Y CONTACTO RÁPIDO -->
+  <div class="bg-slate-950 text-white text-xs py-2 px-4 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2 overflow-hidden">
+        <span class="inline-flex items-center gap-1.5 bg-rose-600 text-white font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider text-[10px] shrink-0">
+          <span class="w-1.5 h-1.5 rounded-full bg-white live-dot"></span>
+          Edición 50/50
+        </span>
+        <p id="breaking-ticker" class="truncate text-slate-300 font-medium">
+          Noticias al instante + Impulso real a emprendedores y estrenos musicales.
+        </p>
+      </div>
+      <div class="flex items-center gap-4 shrink-0">
+        <span id="current-date" class="hidden sm:inline text-slate-400"></span>
+        <a href="https://wa.me/59165016029?text=Hola%20Revista%20Al%20Paso%2C%20quiero%20informaci%C3%B3n%20para%20anunciar%20mi%20proyecto." 
+           target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 font-semibold transition">
+          <span>WhatsApp: 65016029</span>
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER STICKY -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
+      <!-- Logotipo Editorial -->
+      <a href="#inicio" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-900 flex items-center justify-center text-white font-black text-lg sm:text-xl tracking-tighter shadow-md group-hover:bg-rose-600 transition">
+          AP
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-xl sm:text-2xl font-black tracking-tight text-slate-900">AL PASO</span>
+            <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 border border-amber-200">Revista Digital</span>
+          </div>
+          <p class="text-[11px] text-slate-500 font-medium hidden sm:block">50% Noticias • 50% Impulso Comercial y Artístico</p>
+        </div>
+      </a>
+
+      <!-- Navegación Desktop -->
+      <nav class="hidden lg:flex items-center gap-6 text-sm font-semibold text-slate-600">
+        <a href="#edicion-50-50" class="hover:text-rose-600 transition">Edición 50/50</a>
+        <a href="#emprendedores" class="hover:text-rose-600 transition">Emprendedores</a>
+        <a href="#artistas" class="hover:text-rose-600 transition">Estrenos Musicales</a>
+        <a href="#servicios" class="hover:text-rose-600 transition">Planes de Difusión</a>
+        <a href="#publicar-ahora" class="hover:text-rose-600 transition">Cotizar Espacio</a>
+      </nav>
+
+      <!-- Botones de Acción Header -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Botón Modo Editor para publicar noticias o anuncios en vivo -->
+        <button onclick="openEditorModal()" 
+                title="Publicar noticia o anuncio de prueba"
+                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition">
+          <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          <span class="hidden sm:inline">Publicar</span>
+        </button>
+
+        <!-- CTA Principal WhatsApp -->
+        <a href="https://wa.me/59165016029?text=Hola%20Revista%20Al%20Paso%2C%20quiero%20dar%20a%20conocer%20mi%20emprendimiento%20o%20lanzamiento%20musical." 
+           target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-md shadow-emerald-600/20 transition transform active:scale-95">
+          <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/></svg>
+          <span>Anunciar • 65016029</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- SECCIÓN HERO: PROPUESTA DE VALOR 50/50 -->
+  <section id="inicio" class="bg-slate-900 text-white relative overflow-hidden">
+    <div class="absolute inset-0 opacity-15 pointer-events-none">
+      <div class="grid grid-cols-2 h-full">
+        <div class="bg-gradient-to-br from-rose-600 to-transparent"></div>
+        <div class="bg-gradient-to-bl from-amber-500 to-transparent"></div>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 relative z-10">
+      <div class="grid lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7 space-y-5">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs font-semibold text-amber-300">
+            <span>📰 Mitad Información</span>
+            <span class="text-slate-500">|</span>
+            <span>🚀 Mitad Visibilidad Comercial y Artística</span>
+          </div>
+          
+          <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
+            Infórmate al instante e impulsa tu <span class="text-rose-500">emprendimiento</span> o <span class="text-amber-400">nuevo tema musical</span>.
+          </h1>
+          
+          <p class="text-slate-300 text-base sm:text-lg max-w-2xl leading-relaxed">
+            En <strong>Revista Al Paso</strong> diseñamos un formato único: <strong>50% noticias locales, nacionales e internacionales</strong> y <strong>50% vitrina publicitaria de alto impacto</strong> para que tu marca o canción destaque sin competir con decenas de banners.
+          </p>
+
+          <div class="flex flex-wrap gap-3 pt-2">
+            <a href="#publicar-ahora" 
+               class="inline-flex items-center justify-center gap-2 bg-rose-600 hover:bg-rose-700 text-white font-bold px-6 py-3.5 rounded-xl shadow-lg shadow-rose-600/30 transition text-sm sm:text-base">
+              <span>Quiero anunciar mi proyecto</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            </a>
+            <a href="#edicion-50-50" 
+               class="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white font-semibold px-6 py-3.5 rounded-xl border border-white/20 transition text-sm sm:text-base">
+              <span>Leer Edición 50/50 Hoy</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Tarjeta Visual Explicativa del Concepto 50/50 -->
+        <div class="lg:col-span-5">
+          <div class="bg-slate-800/90 border border-slate-700 rounded-2xl p-4 sm:p-5 shadow-2xl">
+            <div class="flex items-center justify-between text-xs text-slate-400 pb-3 mb-3 border-b border-slate-700">
+              <span class="font-bold text-white uppercase tracking-wider">Formato Exclusivo Al Paso</span>
+              <span class="text-emerald-400 font-semibold">● Atención Dividida 50/50</span>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <!-- Mitad Noticias -->
+              <div class="bg-slate-900/90 border border-slate-700 rounded-xl p-3.5 space-y-2">
+                <span class="inline-block text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-rose-600/20 text-rose-400">50% Noticias</span>
+                <h3 class="font-bold text-sm text-white leading-snug">Local, Nacional e Internacional</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">Lectura ágil que retiene al público todos los días.</p>
+              </div>
+              <!-- Mitad Publicidad -->
+              <div class="bg-gradient-to-br from-amber-500/20 to-emerald-500/10 border border-amber-500/40 rounded-xl p-3.5 space-y-2">
+                <span class="inline-block text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">50% Publicidad</span>
+                <h3 class="font-bold text-sm text-white leading-snug">Emprendedores y Artistas</h3>
+                <p class="text-xs text-slate-300 leading-relaxed">Tu anuncio ocupa la otra mitad con botón directo a tu WhatsApp.</p>
+              </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-700 flex items-center justify-between text-xs">
+              <span class="text-slate-400">Contacto directo editorial:</span>
+              <a href="https://wa.me/59165016029?text=Hola%20Revista%20Al%20Paso%2C%20me%20interesa%20el%20espacio%20publicitario%2050%2F50." 
+                 target="_blank" rel="noopener noreferrer"
+                 class="font-bold text-emerald-400 hover:underline">
+                WhatsApp 65016029 →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NÚCLEO PRINCIPAL: EDICIÓN DIGITAL 50/50 (MITAD NOTICIAS / MITAD PUBLICIDAD) -->
+  <main id="edicion-50-50" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+    
+    <!-- Encabezado y Controles de Filtro -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+      <div>
+        <span class="text-xs font-extrabold uppercase tracking-wider text-rose-600">Lectura y Vitrina Simultánea</span>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Edición Digital 50/50</h2>
+        <p class="text-sm text-slate-600 mt-1">A la izquierda la actualidad informativa; a la derecha los emprendedores y artistas destacados de hoy.</p>
+      </div>
+
+      <!-- Filtros de Noticias -->
+      <div class="flex flex-wrap items-center gap-2" role="tablist" aria-label="Filtrar noticias por alcance">
+        <button onclick="filterNews('todas')" data-filter="todas" class="news-filter-btn active px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-white transition">Todas</button>
+        <button onclick="filterNews('Local')" data-filter="Local" class="news-filter-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 transition">📍 Locales</button>
+        <button onclick="filterNews('Nacional')" data-filter="Nacional" class="news-filter-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 transition">🇧🇴 Nacionales</button>
+        <button onclick="filterNews('Internacional')" data-filter="Internacional" class="news-filter-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 transition">🌎 Internacionales</button>
+      </div>
+    </div>
+
+    <!-- Selector rápido en móvil para alternar o ver ambos -->
+    <div class="lg:hidden grid grid-cols-2 gap-2 p-1.5 bg-slate-200/80 rounded-2xl mb-6">
+      <button id="mobile-tab-news" onclick="setMobileSplitView('both')" class="py-2.5 px-3 rounded-xl text-xs font-extrabold bg-white text-slate-900 shadow-sm transition">
+        📰 Ver 50/50 Completo
+      </button>
+      <button id="mobile-tab-ads" onclick="setMobileSplitView('ads')" class="py-2.5 px-3 rounded-xl text-xs font-extrabold text-slate-600 hover:text-slate-900 transition">
+        📢 Ir a Vitrina Publicitaria
+      </button>
+    </div>
+
+    <!-- CONTENEDOR SPLIT 50% NOTICIAS / 50% PUBLICIDAD -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-start">
+      
+      <!-- MITAD IZQUIERDA (50%): NOTICIAS LOCALES, NACIONALES E INTERNACIONALES -->
+      <section id="half-news" class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="bg-slate-900 text-white px-5 py-4 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+            <h3 class="font-extrabold text-sm sm:text-base uppercase tracking-wide">Mitad 1: Noticias Al Paso</h3>
+          </div>
+          <span id="news-count-badge" class="text-xs font-semibold bg-white/10 px-2.5 py-1 rounded-lg text-slate-200">6 notas</span>
+        </div>
+
+        <!-- Buscador rápido de noticias -->
+        <div class="p-4 border-b border-slate-100 bg-slate-50/70">
+          <div class="relative">
+            <input type="text" id="news-search" oninput="renderNews()" placeholder="Buscar noticia local, nacional o internacional..."
+                   class="w-full pl-9 pr-4 py-2.5 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent" />
+            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+        </div>
+
+        <!-- Lista dinámica de Noticias -->
+        <div id="news-list" class="divide-y divide-slate-100 max-h-[820px] overflow-y-auto">
+          <!-- Renderizado por JS -->
+        </div>
+      </section>
+
+      <!-- MITAD DERECHA (50%): PUBLICIDAD DE IMPACTO (EMPRENDEDORES + ARTISTAS) -->
+      <aside id="half-ads" class="bg-white rounded-3xl border-2 border-amber-400/70 shadow-lg overflow-hidden lg:sticky lg:top-24">
+        <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 text-white px-5 py-4 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-white live-dot"></span>
+            <h3 class="font-extrabold text-sm sm:text-base uppercase tracking-wide">Mitad 2: Espacio Publicitario</h3>
+          </div>
+          <span class="text-[11px] font-extrabold bg-black/25 px-2.5 py-1 rounded-lg uppercase tracking-wider">Vitrina Oficial</span>
+        </div>
+
+        <div class="p-5 sm:p-6 space-y-6">
+          <!-- Anuncio Principal Destacado (Rotador interactivo) -->
+          <div id="featured-ad-card" class="rounded-2xl bg-slate-900 text-white p-5 sm:p-6 relative overflow-hidden shadow-md">
+            <!-- Contenido dinámico del anuncio destacado -->
+          </div>
+
+          <!-- Controles del Carrusel Publicitario -->
+          <div class="flex items-center justify-between gap-2">
+            <div id="ad-dots" class="flex items-center gap-1.5"></div>
+            <div class="flex items-center gap-2">
+              <button onclick="prevAd()" aria-label="Anuncio anterior" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+              </button>
+              <button onclick="nextAd()" aria-label="Siguiente anuncio" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Bloque Dual: Emprendedores Nuevos & Estrenos Musicales -->
+          <div class="grid sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+            <!-- Mini Vitrina Emprendedores -->
+            <div class="rounded-2xl bg-amber-50/80 border border-amber-200/80 p-4 flex flex-col justify-between space-y-3">
+              <div>
+                <span class="inline-block text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-amber-200 text-amber-900 mb-1.5">🚀 Emprendedores Nuevos</span>
+                <h4 class="font-extrabold text-sm text-slate-900">¿Arrancaste tu negocio?</h4>
+                <p class="text-xs text-slate-600 mt-1 leading-relaxed">Te presentamos ante miles de lectores locales y nacionales con nota + anuncio fijo.</p>
+              </div>
+              <a href="https://wa.me/59165016029?text=Hola%20Revista%20Al%20Paso%2C%20soy%20emprendedor%20nuevo%20y%20quiero%20dar%20a%20conocer%20mi%20negocio." 
+                 target="_blank" rel="noopener noreferrer"
+                 class="w-full text-center bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs py-2.5 px-3 rounded-xl transition">
+                Impulsar mi Emprendimiento
+              </a>
+            </div>
+
+            <!-- Mini Vitrina Artistas Musicales -->
+            <div class="rounded-2xl bg-rose-50/80 border border-rose-200/80 p-4 flex flex-col justify-between space-y-3">
+              <div>
+                <span class="inline-block text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-rose-200 text-rose-900 mb-1.5">🎵 Artistas & Música</span>
+                <h4 class="font-extrabold text-sm text-slate-900">¿Estrenas tema nuevo?</h4>
+                <p class="text-xs text-slate-600 mt-1 leading-relaxed">Difundimos tu lanzamiento musical, videoclip y entrevista en nuestra vitrina sonora.</p>
+              </div>
+              <a href="https://wa.me/59165016029?text=Hola%20Revista%20Al%20Paso%2C%20soy%20artista%20y%20quiero%20promocionar%20mi%20nuevo%20tema%20musical." 
+                 target="_blank" rel="noopener noreferrer"
+                 class="w-full text-center bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs py-2.5 px-3 rounded-xl transition">
+                Estrenar mi Canción
+              </a>
+            </div>
+          </div>
+
+          <!-- Llamado directo a ocupar esta mitad -->
+          <div class="rounded-2xl bg-emerald-50 border border-emerald-200 p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="text-center sm:text-left">
+              <p class="text-xs font-extrabold text-emerald-900 uppercase">Tu marca puede estar aquí hoy</p>
+              <p class="text-xs text-emerald-700">Escríbenos directo al WhatsApp <strong>65016029</strong></p>
+            </div>
+            <a href="https://wa.me/59165016029?text=Hola%20Revista%20Al%20Paso%2C%20quiero%20reservar%20mi%20espacio%20publicitario%20en%20la%20revista." 
+               target="_blank" rel="noopener noreferrer"
+               class="shrink-0 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition">
+              Reservar Espacio
+            </a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- SECCIÓN DEDICADA: ESTRENOS MUSICALES DE ARTISTAS NUEVOS -->
+  <section id="artistas" class="bg-slate-900 text-white py-14 sm:py-16 border-y border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-rose-400">Talento Emergente • Escucha y Apoya</span>
+          <h2 class="text-2xl sm:text-3xl font-black tracking-tight mt-1">Lanzamientos Musicales Al Paso</h2>
+          <p class="text-sm text-slate-400 mt-1 max-w-2xl">Damos vitrina real a artistas nuevos con sus temas musicales. Pulsa <strong>Escuchar Preview</strong> para oír una muestra sonora sintetizada de cada estreno.</p>
+        </div>
+        <a href="https://wa.me/59165016029?text=Hola%20Revista%20Al%20Paso%2C%20quiero%20que%20mi%20nuevo%20tema%20musical%20aparezca%20en%20la%20secci%C3%B3n%20de%20Estrenos." 
+           target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-xl transition self-start md:self-auto">
+          <span>+ Postular mi Tema Musical</span>
+        </a>
+      </div>
+
+      <div id="artists-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Renderizado por JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN DEDICADA: VITRINA DE EMPRENDEDORES NUEVOS -->
+  <section id="emprendedores" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+      <div>
+        <span class="text-xs font-extrabold uppercase tracking-wider text-amber-600">Impulso al Comercio Local y Nacional</span>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-1">Emprendedores Destacados</h2>
+        <p class="text-sm text-slate-600 mt-1 max-w-2xl">Conoce proyectos nuevos que están creciendo gracias a la difusión 50/50 de Revista Al Paso.</p>
+      </div>
+      <a href="https://wa.me/59165016029?text=Hola%20Revista%20Al%20Paso%2C%20tengo%20un%20emprendimiento%20nuevo%20y%20quiero%20aparecer%20en%20la%20vitrina." 
+         target="_blank" rel="noopener noreferrer"
+         class="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-xl transition self-start md:self-auto">
+        <span>+ Sumar mi Emprendimiento</span>
+      </a>
+    </div>
+
+    <div id="entrepreneurs-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Renderizado por JS -->
+    </div>
+  </section>
+
+  <!-- SECCIÓN DE SERVICIOS Y PLANES DE DIFUSIÓN -->
+  <section id="servicios" class="bg-slate-100 py-14 sm:py-16 border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <span class="text-xs font-extrabold uppercase tracking-wider text-rose-600">Soluciones de Visibilidad</span>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-1">¿Cómo te ayudamos a darte a conocer?</h2>
+        <p class="text-sm text-slate-600 mt-2">Elige el formato ideal para tu marca, emprendimiento o lanzamiento musical y coordínalo directo por WhatsApp.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Servicio 1: Emprendedores Nuevos -->
+        <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-black text-xl mb-4">🚀</div>
+            <span class="text-[11px] font-extrabold uppercase text-amber-600">Para Negocios Emergentes</span>
+            <h3 class="text-xl font-black text-slate-900 mt-1">Pack Emprendedor Nuevo</h3>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">Ideal para dar a conocer tu marca desde cero frente a audiencia real sin gastar fortunas en agencias tradicionales.</p>
+            <ul class="mt-4 space-y-2 text-xs text-slate-700 font-medium">
+              <li class="flex items-center gap-2"><span class="text-emerald-600 font-bold">✓</span> Nota editorial contando tu historia y oferta</li>
+              <li class="flex items-center gap-2"><span class="text-emerald-600 font-bold">✓</span> Presencia en la mitad publicitaria 50/50</li>
+              <li class="flex items-center gap-2"><span class="text-emerald-600 font-bold">✓</span> Botón directo a tu WhatsApp o redes</li>
+            </ul>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-100">
+            <a href="https://wa.me/59165016029?text=Hola%20Revista%20Al%20Paso%2C%20me%20interesa%20el%20Pack%20Emprendedor%20Nuevo%20para%20dar%20a%20conocer%20mi%20negocio." 
+               target="_blank" rel="noopener noreferrer"
+               class="w-full inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm py-3 px-4 rounded-xl transition">
+              <span>Consultar por WhatsApp</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Servicio 2: Artistas Musicales (Destacado) -->
+        <div class="bg-slate-900 text-white rounded-3xl p-6 sm:p-7 border-2 border-rose-500 shadow-xl flex flex-col justify-between relative">
+          <span class="absolute -top-3 right-6 bg-rose-600 text-white text-[10px] font-extrabold uppercase px-3 py-1 rounded-full tracking-wider">Muy Solicitado</span>
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-rose-600/20 text-rose-400 flex items-center justify-center font-black text-xl mb-4">🎵</div>
+            <span class="text-[11px] font-extrabold uppercase text-rose-400">Para Cantantes y Bandas</span>
+            <h3 class="text-xl font-black text-white mt-1">Estreno Musical Al Paso</h3>
+            <p class="text-sm text-slate-300 mt-2 leading-relaxed">Lanza tu nuevo sencillo, videoclip o EP con máxima exposición junto a las noticias más leídas del día.</p>
+            <ul class="mt-4 space-y-2 text-xs text-slate-200 font-medium">
+              <li class="flex items-center gap-2"><span class="text-rose-400 font-bold">✓</span> Reseña de lanzamiento + enlace a Spotify/YouTube</li>
+              <li class="flex items-center gap-2"><span class="text-rose-400 font-bold">✓</span> Tarjeta destacada en Estrenos Musicales</li>
+              <li class="flex items-center gap-2"><span class="text-rose-400 font-bold">✓</span> Banner rotativo en la mitad publicitaria 50/50</li>
+            </ul>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-800">
+            <a href="https://wa.me/59165016029?text=Hola%20Revista%20Al%20Paso%2C%20quiero%20contratar%20el%20plan%20Estreno%20Musical%20para%20mi%20nueva%20canci%C3%B3n." 
+               target="_blank" rel="noopener noreferrer"
+               class="w-full inline-flex items-center justify-center gap-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm py-3 px-4 rounded-xl shadow-lg shadow-rose-600/30 transition">
+              <span>Lanzar mi Tema Ahora</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Servicio 3: Pauta Publicitaria 50/50 -->
+        <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+          <div>
+            <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-black text-xl mb-4">📢</div>
+            <span class="text-[11px] font-extrabold uppercase text-emerald-600">Para Empresas y Eventos</span>
+            <h3 class="text-xl font-black text-slate-900 mt-1">Pauta Exclusiva 50/50</h3>
+            <p class="text-sm text-slate-600 mt-2 leading-relaxed">Ocupa la mitad visual de nuestra revista mientras los lectores revisan noticias locales, nacionales e internacionales.</p>
+            <ul class="mt-4 space-y-2 text-xs text-slate-700 font-medium">
+              <li class="flex items-center gap-2"><span class="text-emerald-600 font-bold">✓</span> Visibilidad compartida 50% en portada</li>
+              <li class="flex items-center gap-2"><span class="text-emerald-600 font-bold">✓</span> Campañas semanales o mensuales flexibles</li>
+              <li class="flex items-center gap-2"><span class="text-emerald-600 font-bold">✓</span> Tráfico directo hacia tus chats de WhatsApp</li>
+            </ul>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-100">
+            <a href="https://wa.me/59165016029?text=Hola%20Revista%20Al%20Paso%2C%20quiero%20cotizar%20Pauta%20Exclusiva%2050%2F50%20para%20mi%20marca." 
+               target="_blank" rel="noopener noreferrer"
+               class="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm py-3 px-4 rounded-xl transition">
+              <span>Cotizar Pauta 50/50</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ASISTENTE INTERACTIVO DE CONVERSIÓN: GENERADOR DE ANUNCIO PARA WHATSAPP (65016029) -->
+  <section id="publicar-ahora" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16">
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden grid md:grid-cols-12">
+      <!-- Formulario Rápido -->
+      <div class="md:col-span-7 p-6 sm:p-8 space-y-5">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-600">Sin formularios largos • Cierre inmediato</span>
+          <h2 class="text-2xl font-black text-slate-900 mt-1">Prepara tu publicación en 30 segundos</h2>
+          <p class="text-sm text-slate-600 mt-1">Completa estos datos básicos y te enviaremos directo a nuestro WhatsApp <strong>65016029</strong> con tu solicitud lista.</p>
+        </div>
+
+        <form id="wa-lead-form" onsubmit="sendCustomWhatsApp(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase text-slate-700 mb-1.5">1. ¿Qué deseas promocionar?</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button type="button" onclick="selectLeadType('Emprendimiento Nuevo')" data-lead-type="Emprendimiento Nuevo"
+                      class="lead-type-btn active py-2.5 px-2 rounded-xl text-xs font-bold border-2 border-slate-900 bg-slate-900 text-white text-center transition">
+                🚀 Emprendedor
+              </button>
+              <button type="button" onclick="selectLeadType('Nuevo Tema Musical')" data-lead-type="Nuevo Tema Musical"
+                      class="lead-type-btn py-2.5 px-2 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 text-center transition">
+                🎵 Artista / Tema
+              </button>
+              <button type="button" onclick="selectLeadType('Publicidad Comercial 50/50')" data-lead-type="Publicidad Comercial 50/50"
+                      class="lead-type-btn py-2.5 px-2 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 text-center transition">
+                📢 Publicidad
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label for="lead-name" class="block text-xs font-bold uppercase text-slate-700 mb-1">2. Nombre de tu marca, emprendimiento o artista *</label>
+            <input type="text" id="lead-name" required oninput="updateLivePreview()" placeholder="Ej. Café del Valle / DJ Nova - 'Noche de Luz'"
+                   class="w-full px-4 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500" />
+          </div>
+
+          <div>
+            <label for="lead-detail" class="block text-xs font-bold uppercase text-slate-700 mb-1">3. ¿Qué quieres destacar en la revista? *</label>
+            <textarea id="lead-detail" rows="3" required oninput="updateLivePreview()" placeholder="Ej. Queremos dar a conocer nuestro lanzamiento y recibir pedidos directos por WhatsApp..."
+                      class="w-full px-4 py-2.5 text-sm border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500"></textarea>
+          </div>
+
+          <button type="submit" 
+                  class="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm py-3.5 px-6 rounded-xl shadow-lg shadow-emerald-600/25 transition">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/></svg>
+            <span>Enviar a WhatsApp (65016029)</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Vista Previa en Vivo de su Tarjeta 50/50 -->
+      <div class="md:col-span-5 bg-slate-900 text-white p-6 sm:p-8 flex flex-col justify-between">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+            Vista Previa en la Mitad Publicitaria
+          </span>
+          <div class="mt-5 rounded-2xl bg-slate-800 border border-slate-700 p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <span id="preview-badge" class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded bg-rose-600 text-white">Emprendimiento Nuevo</span>
+              <span class="text-[11px] text-slate-400">Revista Al Paso</span>
+            </div>
+            <h3 id="preview-title" class="text-lg font-black text-white leading-snug">Tu Marca o Canción Aquí</h3>
+            <p id="preview-desc" class="text-xs text-slate-300 leading-relaxed">Aquí aparecerá el resumen atractivo de tu emprendimiento o estreno musical junto a las noticias del día.</p>
+            <div class="pt-2">
+              <span class="inline-block text-xs font-bold text-emerald-400">● Contacto directo habilitado</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400 space-y-1">
+          <p class="font-semibold text-white">Atención directa por WhatsApp:</p>
+          <p>Número oficial: <span class="text-emerald-400 font-bold">+591 65016029</span></p>
+          <p>Respuesta rápida para coordinar arte, audio o nota editorial.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER EDITORIAL Y LEGAL -->
+  <footer class="bg-slate-950 text-slate-400 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-slate-800">
+        <div class="md:col-span-2 space-y-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-xl bg-rose-600 text-white font-black flex items-center justify-center">AP</div>
+            <span class="text-xl font-black text-white tracking-tight">REVISTA AL PASO</span>
+          </div>
+          <p class="text-sm text-slate-400 max-w-md leading-relaxed">
+            Medio digital independiente con formato editorial equilibrado: 50% noticias locales, nacionales e internacionales y 50% plataforma de impulso para emprendedores nuevos y artistas musicales.
+          </p>
+          <p class="text-xs text-emerald-400 font-semibold">
+            WhatsApp Comercial y Prensa: +591 65016029
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-extrabold uppercase tracking-wider text-white mb-3">Secciones</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#edicion-50-50" class="hover:text-white transition">Edición 50/50</a></li>
+            <li><a href="#emprendedores" class="hover:text-white transition">Vitrina Emprendedores</a></li>
+            <li><a href="#artistas" class="hover:text-white transition">Estrenos Musicales</a></li>
+            <li><a href="#servicios" class="hover:text-white transition">Planes de Difusión</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-extrabold uppercase tracking-wider text-white mb-3">Información Legal</h4>
+          <ul class="space-y-2 text-sm">
+            <li><button onclick="openLegalModal('aviso')" class="hover:text-white transition text-left">Aviso Legal</button></li>
+            <li><button onclick="openLegalModal('privacidad')" class="hover:text-white transition text-left">Política de Privacidad</button></li>
+            <li><button onclick="openLegalModal('cookies')" class="hover:text-white transition text-left">Política de Cookies</button></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+        <p>© 2026 Revista Digital Al Paso. Todos los derechos reservados.</p>
+        <p>Hecho para informar e impulsar talento emergente.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BOTÓN FLOTANTE DE WHATSAPP (65016029) -->
+  <a href="https://wa.me/59165016029?text=Hola%20Revista%20Al%20Paso%2C%20vengo%20desde%20su%20aplicaci%C3%B3n%20web%20y%20quiero%20m%C3%A1s%20informaci%C3%B3n." 
+     target="_blank" rel="noopener noreferrer"
+     aria-label="Escribir por WhatsApp al 65016029"
+     class="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs sm:text-sm px-4 py-3.5 rounded-full shadow-2xl shadow-emerald-900/40 transition transform hover:scale-105">
+    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/></svg>
+    <span>WhatsApp 65016029</span>
+  </a>
+
+  <!-- MODAL DE LECTURA COMPLETA DE NOTICIA -->
+  <div id="article-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/75 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200">
+      <div class="p-6 sm:p-8 space-y-4">
+        <div class="flex items-center justify-between gap-2">
+          <span id="modal-news-category" class="text-xs font-extrabold uppercase px-3 py-1 rounded-full bg-rose-100 text-rose-700">Local</span>
+          <button onclick="closeArticleModal()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <h3 id="modal-news-title" class="text-2xl font-black text-slate-900 leading-tight"></h3>
+        <p id="modal-news-meta" class="text-xs text-slate-500 font-medium"></p>
+        <div id="modal-news-body" class="text-sm sm:text-base text-slate-700 leading-relaxed space-y-3 pt-2 border-t border-slate-100"></div>
+        
+        <!-- Banner publicitario integrado al final de la lectura -->
+        <div class="mt-6 rounded-2xl bg-amber-50 border border-amber-200 p-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div>
+            <p class="text-xs font-extrabold text-amber-900 uppercase">¿Quieres anunciar tu marca o canción junto a nuestras noticias?</p>
+            <p class="text-xs text-amber-800">Escríbenos ahora al WhatsApp <strong>65016029</strong></p>
+          </div>
+          <a href="https://wa.me/59165016029?text=Hola%20Revista%20Al%20Paso%2C%20estaba%20leyendo%20una%20noticia%20y%20quiero%20anunciar%20mi%20proyecto." 
+             target="_blank" rel="noopener noreferrer"
+             class="shrink-0 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition">
+            Escribir por WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL MODO EDITOR (PUBLICAR NOTICIA O ANUNCIO EN VIVO) -->
+  <div id="editor-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/75 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 p-6 sm:p-7 space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded bg-slate-900 text-white">Panel Rápido Al Paso</span>
+          <h3 class="text-xl font-black text-slate-900 mt-1">Publicar Contenido 50/50</h3>
+        </div>
+        <button onclick="closeEditorModal()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">✕</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl">
+        <button type="button" id="tab-pub-news" onclick="switchEditorTab('news')" class="py-2 rounded-lg text-xs font-extrabold bg-white text-slate-900 shadow-sm">📰 Nueva Noticia</button>
+        <button type="button" id="tab-pub-ad" onclick="switchEditorTab('ad')" class="py-2 rounded-lg text-xs font-extrabold text-slate-600">📢 Nuevo Anuncio</button>
+      </div>
+
+      <!-- Formulario Publicar Noticia -->
+      <form id="form-add-news" onsubmit="handleAddNews(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Alcance de la noticia</label>
+          <select id="new-news-cat" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl">
+            <option value="Local">Local</option>
+            <option value="Nacional">Nacional</option>
+            <option value="Internacional">Internacional</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Titular de la noticia *</label>
+          <input type="text" id="new-news-title" required placeholder="Ej. Feria de emprendedores reúne a más de 80 marcas locales" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Resumen / Desarrollo de la nota *</label>
+          <textarea id="new-news-summary" rows="3" required placeholder="Escribe el contenido principal de la noticia..." class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl"></textarea>
+        </div>
+        <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm py-3 rounded-xl transition">Publicar en Mitad Noticias</button>
+      </form>
+
+      <!-- Formulario Publicar Anuncio (Emprendedor o Artista) -->
+      <form id="form-add-ad" onsubmit="handleAddAd(event)" class="space-y-3 hidden">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Tipo de anuncio</label>
+          <select id="new-ad-type" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl">
+            <option value="Emprendedor Nuevo">Emprendedor Nuevo</option>
+            <option value="Estreno Musical">Artista / Nuevo Tema Musical</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Nombre del Emprendimiento o Artista + Tema *</label>
+          <input type="text" id="new-ad-title" required placeholder="Ej. Leo Vargas - 'Latidos de Ciudad'" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Mensaje publicitario *</label>
+          <textarea id="new-ad-desc" rows="2" required placeholder="Describe la oferta, producto o lanzamiento musical..." class="w-full px-3 py-2 text-sm border border-slate-300 rounded-xl"></textarea>
+        </div>
+        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm py-3 rounded-xl transition">Publicar en Mitad Publicitaria</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL LEGAL (AVISO LEGAL / PRIVACIDAD / COOKIES) -->
+  <div id="legal-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/75 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 id="legal-modal-title" class="text-lg font-black text-slate-900">Aviso Legal</h3>
+        <button onclick="closeLegalModal()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">✕</button>
+      </div>
+      <div id="legal-modal-content" class="text-xs sm:text-sm text-slate-600 space-y-2 leading-relaxed"></div>
+    </div>
+  </div>
+
+  <!-- BANNER DE CONSENTIMIENTO DE COOKIES -->
+  <div id="cookie-banner" class="fixed bottom-4 left-4 right-4 sm:right-auto sm:max-w-md z-30 bg-slate-900 text-white p-4 rounded-2xl shadow-2xl border border-slate-700 hidden">
+    <p class="text-xs text-slate-300 leading-relaxed">
+      Utilizamos almacenamiento local y cookies técnicas para guardar tus preferencias de lectura y mejorar tu experiencia en <strong>Revista Al Paso</strong>.
+    </p>
+    <div class="flex items-center gap-2 mt-3">
+      <button onclick="acceptCookies()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition">Aceptar</button>
+      <button onclick="openLegalModal('cookies')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs px-3 py-2 rounded-xl transition">Ver detalles</button>
+    </div>
+  </div>
+
+  <!-- NOTIFICACIÓN TOAST (REEMPLAZA ALERT) -->
+  <div id="toast" class="fixed top-24 right-4 z-50 bg-slate-900 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-xl border border-slate-700 transform translate-x-full opacity-0 transition-all duration-300"></div>
+
+  <script>
+    // ==========================================
+    // DATOS INICIALES DE REVISTA AL PASO (50/50)
+    // ==========================================
+    const WHATSAPP_NUMBER = "59165016029";
+
+    const DEFAULT_NEWS = [
+      {
+        id: 1,
+        category: "Local",
+        time: "Hace 25 min",
+        title: "Emprendedores jóvenes impulsan ferias nocturnas de diseño y gastronomía local",
+        summary: "Más de 60 marcas emergentes participan este fin de semana con propuestas innovadoras, música en vivo y ventas directas.",
+        content: "El movimiento emprendedor local continúa consolidándose como motor económico y cultural. Durante este fin de semana, decenas de marcas nuevas de gastronomía artesanal, moda independiente y tecnología creativa se dan cita para conectar directamente con el público. Desde Revista Al Paso destacamos el valor de apoyar el talento que nace en nuestra ciudad."
+      },
+      {
+        id: 2,
+        category: "Nacional",
+        time: "Hace 1 hora",
+        title: "El comercio digital y las ventas por WhatsApp crecen un 42% en todo el país",
+        summary: "Pymes y artistas independientes adoptan canales conversacionales directos para promocionar lanzamientos sin intermediarios.",
+        content: "Un reciente informe sobre hábitos de consumo digital en el país confirma que los usuarios prefieren conversar directamente por WhatsApp antes de concretar una compra o contratar un servicio. Este cambio favorece a emprendedores ágiles y medios digitales modernos que conectan audiencia con ofertas reales."
+      },
+      {
+        id: 3,
+        category: "Internacional",
+        time: "Hace 2 horas",
+        title: "La música independiente latinoamericana rompe récords de reproducción en plataformas",
+        summary: "Nuevos artistas emergentes logran viralizar sus sencillos mediante difusión digital segmentada y medios independientes.",
+        content: "El panorama musical internacional vive una descentralización histórica: hoy los artistas independientes compiten de igual a igual con grandes sellos discográficos gracias a estrategias de estreno digital, reseñas en revistas culturales y comunidades digitales activas."
+      },
+      {
+        id: 4,
+        category: "Local",
+        time: "Hace 3 horas",
+        title: "Escena musical urbana y folklórica fusionada gana espacio en escenarios locales",
+        summary: "Productores y cantantes jóvenes presentan nuevas colaboraciones que refrescan la cartelera artística de la temporada.",
+        content: "La nueva generación de músicos locales apuesta por mezclar raíces rítmicas tradicionales con producción moderna. Varios de estos estrenos ya forman parte de la rotación especial en la vitrina musical de Revista Al Paso."
+      },
+      {
+        id: 5,
+        category: "Nacional",
+        time: "Hace 4 horas",
+        title: "Programas de digitalización abren nuevas oportunidades para pequeños negocios",
+        summary: "Herramientas de visibilidad web permiten a comercios locales posicionarse en buscadores y redes sociales.",
+        content: "Contar con presencia digital profesional dejó de ser un lujo para convertirse en una necesidad vital. Los negocios que combinan contenido de valor con vitrinas publicitarias claras logran multiplicar sus consultas semanales."
+      },
+      {
+        id: 6,
+        category: "Internacional",
+        time: "Hace 5 horas",
+        title: "Tendencias globales en medios digitales: formatos breves y publicidad no invasiva",
+        summary: "Los lectores prefieren portales limpios donde la información y las recomendaciones comerciales conviven en armonía.",
+        content: "Frente a los sitios saturados de ventanas emergentes molestas, el modelo editorial equilibrado 50/50 gana preferencia entre lectores y anunciantes, logrando mayor tiempo de permanencia y mejor recordación de marca."
+      }
+    ];
+
+    const DEFAULT_ADS = [
+      {
+        id: 101,
+        type: "Estreno Musical",
+        tag: "🎵 Estreno Destacado",
+        title: "Valeria Solís — 'Ritmo Sin Freno' (Nuevo Sencillo)",
+        desc: "Fusión pop-urbana producida en estudio independiente. Escucha su lanzamiento oficial y sigue su gira promocional.",
+        ctaText: "Promocionar mi tema igual",
+        waText: "Hola Revista Al Paso, vi el estreno musical de Valeria Solís y quiero promocionar mi canción."
+      },
+      {
+        id: 102,
+        type: "Emprendedor Nuevo",
+        tag: "🚀 Emprendimiento del Día",
+        title: "Kaffé Origen — Café de Especialidad a Domicilio",
+        desc: "Tostado artesanal semanal con entrega rápida. Descubre sus packs para oficinas y amantes del buen café.",
+        ctaText: "Anunciar mi emprendimiento",
+        waText: "Hola Revista Al Paso, vi el anuncio de Kaffé Origen y quiero dar a conocer mi emprendimiento."
+      },
+      {
+        id: 103,
+        type: "Estreno Musical",
+        tag: "🎧 Lanzamiento Exclusivo",
+        title: "Los del Sur Crew — 'Noche de Estrellas'",
+        desc: "El nuevo tema que ya suena en playlists independientes. Conoce la historia detrás de su videoclip oficial.",
+        ctaText: "Estrenar mi canción aquí",
+        waText: "Hola Revista Al Paso, quiero información para lanzar mi tema musical en la revista."
+      }
+    ];
+
+    const ARTISTS_DATA = [
+      {
+        id: "art-1",
+        name: "Valeria Solís",
+        track: "Ritmo Sin Freno",
+        genre: "Pop Urbano • Estreno 2026",
+        notes: ["C4", "E4", "G4", "A4", "G4", "E4", "D4", "G4"],
+        tempo: 118,
+        summary: "Una propuesta fresca con energía positiva que marca su debut solista."
+      },
+      {
+        id: "art-2",
+        name: "Mateo Cruz & Banda",
+        track: "Horizonte Sur",
+        genre: "Indie Rock / Fusión",
+        notes: ["A3", "C4", "E4", "G4", "F4", "E4", "C4", "D4"],
+        tempo: 110,
+        summary: "Guitarras envolventes y letras cotidianas grabadas en sesión en vivo."
+      },
+      {
+        id: "art-3",
+        name: "DJ Kairo",
+        track: "Pulso Nocturno",
+        genre: "Electrónica Latina",
+        notes: ["E4", "E4", "G4", "B4", "A4", "G4", "E4", "D4"],
+        tempo: 126,
+        summary: "Beats electrónicos fusionados con percusión latina listos para la pista."
+      }
+    ];
+
+    const ENTREPRENEURS_DATA = [
+      {
+        name: "Kaffé Origen",
+        sector: "Gastronomía • Café Artesanal",
+        badge: "Nuevo Emprendimiento",
+        pitch: "Granos seleccionados tostados cada semana con entrega directa en tu hogar u oficina."
+      },
+      {
+        name: "EcoModa Studio",
+        sector: "Diseño & Indumentaria",
+        badge: "Marca Emergente",
+        pitch: "Prendas urbanas confeccionadas con textiles sostenibles y ediciones limitadas."
+      },
+      {
+        name: "TechFix Express",
+        sector: "Servicios Técnicos",
+        badge: "Servicio Destacado",
+        pitch: "Soporte y optimización rápida de laptops y smartphones con garantía escrita."
+      }
+    ];
+
+    // Estado de la aplicación
+    let newsData = JSON.parse(localStorage.getItem('alpaso_news')) || DEFAULT_NEWS;
+    let adsData = JSON.parse(localStorage.getItem('alpaso_ads')) || DEFAULT_ADS;
+    let currentFilter = 'todas';
+    let currentAdIndex = 0;
+    let selectedLeadType = 'Emprendimiento Nuevo';
+    let playingArtistId = null;
+    let activeSequence = null;
+
+    // ==========================================
+    // INICIALIZACIÓN
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', () => {
+      // Fecha actual formateada
+      const dateEl = document.getElementById('current-date');
+      if (dateEl) {
+        const now = new Date();
+        dateEl.textContent = now.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      }
+
+      renderNews();
+      renderFeaturedAd();
+      renderArtists();
+      renderEntrepreneurs();
+
+      // Rotación automática suave de la mitad publicitaria cada 9 segundos
+      setInterval(() => {
+        nextAd();
+      }, 9000);
+
+      // Mostrar banner de cookies si no se ha aceptado
+      if (!localStorage.getItem('alpaso_cookies_ok')) {
+        document.getElementById('cookie-banner').classList.remove('hidden');
+      }
+    });
+
+    // ==========================================
+    // RENDERIZADO MITAD 1: NOTICIAS
+    // ==========================================
+    function filterNews(category) {
+      currentFilter = category;
+      document.querySelectorAll('.news-filter-btn').forEach(btn => {
+        if (btn.dataset.filter === category) {
+          btn.className = "news-filter-btn active px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-white transition";
+        } else {
+          btn.className = "news-filter-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-white text-slate-700 border border-slate-200 hover:bg-slate-100 transition";
+        }
+      });
+      renderNews();
+    }
+
+    function renderNews() {
+      const listEl = document.getElementById('news-list');
+      const countBadge = document.getElementById('news-count-badge');
+      const query = (document.getElementById('news-search')?.value || '').toLowerCase().trim();
+
+      const filtered = newsData.filter(item => {
+        const matchCat = currentFilter === 'todas' || item.category === currentFilter;
+        const matchQuery = !query || item.title.toLowerCase().includes(query) || item.summary.toLowerCase().includes(query);
+        return matchCat && matchQuery;
+      });
+
+      countBadge.textContent = `${filtered.length} ${filtered.length === 1 ? 'nota' : 'notas'}`;
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = `<div class="p-8 text-center text-sm text-slate-500">No encontramos noticias con ese filtro. Prueba otra categoría.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = filtered.map(item => {
+        let badgeColor = "bg-rose-100 text-rose-700";
+        if (item.category === "Nacional") badgeColor = "bg-amber-100 text-amber-800";
+        if (item.category === "Internacional") badgeColor = "bg-sky-100 text-sky-800";
+
+        return `
+          <article class="p-5 hover:bg-slate-50 transition group">
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-md ${badgeColor}">${item.category}</span>
+              <span class="text-[11px] text-slate-400 font-medium">${item.time}</span>
+            </div>
+            <h4 onclick="openArticleModal(${item.id})" class="font-extrabold text-base sm:text-lg text-slate-900 group-hover:text-rose-600 transition cursor-pointer leading-snug">
+              ${item.title}
+            </h4>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed line-clamp-2">
+              ${item.summary}
+            </p>
+            <div class="mt-3 flex items-center justify-between">
+              <button onclick="openArticleModal(${item.id})" class="text-xs font-bold text-rose-600 hover:text-rose-700 inline-flex items-center gap-1">
+                <span>Leer nota completa</span>
+                <span>→</span>
+              </button>
+              <a href="https://wa.me/?text=${encodeURIComponent('Lee esta noticia en Revista Al Paso: ' + item.title)}" 
+                 target="_blank" rel="noopener noreferrer"
+                 class="text-[11px] font-semibold text-slate-400 hover:text-emerald-600 transition">
+                Compartir
+              </a>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    // ==========================================
+    // RENDERIZADO MITAD 2: VITRINA PUBLICITARIA
+    // ==========================================
+    function renderFeaturedAd() {
+      const ad = adsData[currentAdIndex % adsData.length];
+      const container = document.getElementById('featured-ad-card');
+      const dotsEl = document.getElementById('ad-dots');
+
+      container.innerHTML = `
+        <div class="space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <span class="inline-block text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full bg-amber-400 text-slate-950">
+              ${ad.tag}
+            </span>
+            <span class="text-[11px] text-slate-400 font-semibold">Anuncio ${currentAdIndex + 1} de ${adsData.length}</span>
+          </div>
+          <h4 class="text-xl sm:text-2xl font-black text-white leading-tight">
+            ${ad.title}
+          </h4>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            ${ad.desc}
+          </p>
+          <div class="pt-2 flex flex-wrap items-center gap-2.5">
+            <a href="https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(ad.waText)}" 
+               target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs px-4 py-2.5 rounded-xl transition">
+              <span>${ad.ctaText}</span>
+              <span>→</span>
+            </a>
+            <span class="text-[11px] text-slate-400">WhatsApp: 65016029</span>
+          </div>
+        </div>
+      `;
+
+      dotsEl.innerHTML = adsData.map((_, idx) => `
+        <button onclick="goToAd(${idx})" aria-label="Ir al anuncio ${idx + 1}" 
+                class="h-2 rounded-full transition-all ${idx === currentAdIndex ? 'w-6 bg-rose-600' : 'w-2 bg-slate-300'}"></button>
+      `).join('');
+    }
+
+    function nextAd() {
+      currentAdIndex = (currentAdIndex + 1) % adsData.length;
+      renderFeaturedAd();
+    }
+
+    function prevAd() {
+      currentAdIndex = (currentAdIndex - 1 + adsData.length) % adsData.length;
+      renderFeaturedAd();
+    }
+
+    function goToAd(index) {
+      currentAdIndex = index;
+      renderFeaturedAd();
+    }
+
+    // ==========================================
+    // ARTISTAS Y REPRODUCTOR SONORO (TONE.JS)
+    // ==========================================
+    function renderArtists() {
+      const grid = document.getElementById('artists-grid');
+      grid.innerHTML = ARTISTS_DATA.map(artist => {
+        const isPlaying = playingArtistId === artist.id;
+        return `
+          <div class="bg-slate-800/90 border ${isPlaying ? 'border-rose-500 shadow-lg shadow-rose-600/20' : 'border-slate-700'} rounded-2xl p-5 flex flex-col justify-between space-y-4 transition">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-md bg-rose-500/20 text-rose-300">${artist.genre}</span>
+                <div class="flex items-end gap-0.5 h-4 ${isPlaying ? 'eq-playing' : ''}">
+                  <span class="w-1 bg-rose-500 rounded-full h-1.5"></span>
+                  <span class="w-1 bg-amber-400 rounded-full h-3"></span>
+                  <span class="w-1 bg-rose-500 rounded-full h-2"></span>
+                  <span class="w-1 bg-emerald-400 rounded-full h-2.5"></span>
+                </div>
+              </div>
+              <h3 class="text-lg font-black text-white">${artist.track}</h3>
+              <p class="text-xs font-bold text-amber-400 mt-0.5">${artist.name}</p>
+              <p class="text-xs text-slate-300 mt-2 leading-relaxed">${artist.summary}</p>
+            </div>
+
+            <div class="pt-3 border-t border-slate-700 flex items-center justify-between gap-2">
+              <button onclick="toggleArtistPreview('${artist.id}')" 
+                      class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-extrabold ${isPlaying ? 'bg-amber-400 text-slate-950' : 'bg-white/10 hover:bg-white/20 text-white'} transition">
+                <span>${isPlaying ? '⏹ Detener' : '▶ Escuchar Preview'}</span>
+              </button>
+              <a href="https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hola Revista Al Paso, escuché el estreno "' + artist.track + '" de ' + artist.name + ' y quiero promocionar mi música.')}" 
+                 target="_blank" rel="noopener noreferrer"
+                 class="text-xs font-bold text-emerald-400 hover:underline">
+                Publicar mi tema →
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function toggleArtistPreview(artistId) {
+      try {
+        if (activeSequence) {
+          activeSequence.stop();
+          activeSequence.dispose();
+          activeSequence = null;
+        }
+        if (typeof Tone !== 'undefined' && Tone.Transport.state === 'started') {
+          Tone.Transport.stop();
+        }
+
+        if (playingArtistId === artistId) {
+          playingArtistId = null;
+          renderArtists();
+          return;
+        }
+
+        const artist = ARTISTS_DATA.find(a => a.id === artistId);
+        if (!artist) return;
+
+        await Tone.start();
+        const synth = new Tone.PolySynth(Tone.Synth, {
+          oscillator: { type: "triangle" },
+          envelope: { attack: 0.04, decay: 0.2, sustain: 0.2, release: 0.5 }
+        }).toDestination();
+        synth.volume.value = -10;
+
+        Tone.Transport.bpm.value = artist.tempo;
+        let step = 0;
+        activeSequence = new Tone.Loop((time) => {
+          const note = artist.notes[step % artist.notes.length];
+          synth.triggerAttackRelease(note, "8n", time);
+          step++;
+        }, "8n").start(0);
+
+        Tone.Transport.start();
+        playingArtistId = artistId;
+        renderArtists();
+        showToast(`Reproduciendo preview de "${artist.track}" — ${artist.name}`);
+      } catch (err) {
+        showToast("No se pudo iniciar el audio en este navegador.");
+      }
+    }
+
+    // ==========================================
+    // VITRINA DE EMPRENDEDORES NUEVOS
+    // ==========================================
+    function renderEntrepreneurs() {
+      const grid = document.getElementById('entrepreneurs-grid');
+      grid.innerHTML = ENTREPRENEURS_DATA.map(emp => `
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between space-y-4 hover:border-amber-400 transition">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-md bg-amber-100 text-amber-800">${emp.badge}</span>
+              <span class="text-[11px] text-slate-400 font-semibold">${emp.sector}</span>
+            </div>
+            <h3 class="text-lg font-black text-slate-900">${emp.name}</h3>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed">${emp.pitch}</p>
+          </div>
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-[11px] font-bold text-emerald-600">✓ Verificado Al Paso</span>
+            <a href="https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hola Revista Al Paso, me interesa contactar o anunciar un emprendimiento como ' + emp.name)}" 
+               target="_blank" rel="noopener noreferrer"
+               class="text-xs font-extrabold text-slate-900 hover:text-rose-600 transition">
+              Anunciar el mío →
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ==========================================
+    // GENERADOR DE WHATSAPP (CONVERSIÓN)
+    // ==========================================
+    function selectLeadType(type) {
+      selectedLeadType = type;
+      document.querySelectorAll('.lead-type-btn').forEach(btn => {
+        if (btn.dataset.leadType === type) {
+          btn.className = "lead-type-btn active py-2.5 px-2 rounded-xl text-xs font-bold border-2 border-slate-900 bg-slate-900 text-white text-center transition";
+        } else {
+          btn.className = "lead-type-btn py-2.5 px-2 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 text-center transition";
+        }
+      });
+      updateLivePreview();
+    }
+
+    function updateLivePreview() {
+      const name = document.getElementById('lead-name').value.trim();
+      const detail = document.getElementById('lead-detail').value.trim();
+
+      document.getElementById('preview-badge').textContent = selectedLeadType;
+      document.getElementById('preview-title').textContent = name || "Tu Marca o Canción Aquí";
+      document.getElementById('preview-desc').textContent = detail || "Aquí aparecerá el resumen atractivo de tu emprendimiento o estreno musical junto a las noticias del día.";
+    }
+
+    function sendCustomWhatsApp(e) {
+      e.preventDefault();
+      const name = document.getElementById('lead-name').value.trim();
+      const detail = document.getElementById('lead-detail').value.trim();
+
+      const message = `Hola *Revista Al Paso*, quiero dar a conocer mi proyecto:\n\n` +
+                      `• *Categoría:* ${selectedLeadType}\n` +
+                      `• *Nombre / Proyecto:* ${name}\n` +
+                      `• *Detalles:* ${detail}\n\n` +
+                      `¿Me envían información para publicarlo en la revista?`;
+
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+      window.open(url, '_blank', 'noopener,noreferrer');
+      showToast("Abriendo WhatsApp 65016029 con tu solicitud lista...");
+    }
+
+    // ==========================================
+    // MODALES: LECTURA, EDITOR Y LEGAL
+    // ==========================================
+    function openArticleModal(id) {
+      const item = newsData.find(n => n.id === id);
+      if (!item) return;
+      document.getElementById('modal-news-category').textContent = item.category;
+      document.getElementById('modal-news-title').textContent = item.title;
+      document.getElementById('modal-news-meta').textContent = `Publicado ${item.time} • Redacción Revista Al Paso`;
+      document.getElementById('modal-news-body').innerHTML = `<p>${item.content}</p>`;
+      const modal = document.getElementById('article-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeArticleModal() {
+      const modal = document.getElementById('article-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function openEditorModal() {
+      const modal = document.getElementById('editor-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeEditorModal() {
+      const modal = document.getElementById('editor-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function switchEditorTab(tab) {
+      const newsForm = document.getElementById('form-add-news');
+      const adForm = document.getElementById('form-add-ad');
+      const tabNews = document.getElementById('tab-pub-news');
+      const tabAd = document.getElementById('tab-pub-ad');
+
+      if (tab === 'news') {
+        newsForm.classList.remove('hidden');
+        adForm.classList.add('hidden');
+        tabNews.className = "py-2 rounded-lg text-xs font-extrabold bg-white text-slate-900 shadow-sm";
+        tabAd.className = "py-2 rounded-lg text-xs font-extrabold text-slate-600";
+      } else {
+        adForm.classList.remove('hidden');
+        newsForm.classList.add('hidden');
+        tabAd.className = "py-2 rounded-lg text-xs font-extrabold bg-white text-slate-900 shadow-sm";
+        tabNews.className = "py-2 rounded-lg text-xs font-extrabold text-slate-600";
+      }
+    }
+
+    function handleAddNews(e) {
+      e.preventDefault();
+      const cat = document.getElementById('new-news-cat').value;
+      const title = document.getElementById('new-news-title').value.trim();
+      const summary = document.getElementById('new-news-summary').value.trim();
+
+      const newItem = {
+        id: Date.now(),
+        category: cat,
+        time: "Recién publicado",
+        title,
+        summary,
+        content: summary
+      };
+
+      newsData.unshift(newItem);
+      localStorage.setItem('alpaso_news', JSON.stringify(newsData));
+      renderNews();
+      e.target.reset();
+      closeEditorModal();
+      showToast("Noticia publicada en la mitad informativa.");
+    }
+
+    function handleAddAd(e) {
+      e.preventDefault();
+      const type = document.getElementById('new-ad-type').value;
+      const title = document.getElementById('new-ad-title').value.trim();
+      const desc = document.getElementById('new-ad-desc').value.trim();
+
+      const newAd = {
+        id: Date.now(),
+        type,
+        tag: type === 'Estreno Musical' ? '🎵 Estreno Musical' : '🚀 Emprendedor Nuevo',
+        title,
+        desc,
+        ctaText: "Contactar a Revista Al Paso",
+        waText: `Hola Revista Al Paso, vi el anuncio de "${title}" y quiero más información.`
+      };
+
+      adsData.unshift(newAd);
+      currentAdIndex = 0;
+      localStorage.setItem('alpaso_ads', JSON.stringify(adsData));
+      renderFeaturedAd();
+      e.target.reset();
+      closeEditorModal();
+      showToast("Anuncio publicado en la mitad publicitaria 50/50.");
+    }
+
+    function setMobileSplitView(mode) {
+      const adsEl = document.getElementById('half-ads');
+      if (mode === 'ads') {
+        adsEl.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function openLegalModal(type) {
+      const titleEl = document.getElementById('legal-modal-title');
+      const contentEl = document.getElementById('legal-modal-content');
+
+      if (type === 'aviso') {
+        titleEl.textContent = "Aviso Legal — Revista Digital Al Paso";
+        contentEl.innerHTML = `<p><strong>Revista Digital Al Paso</strong> es un medio digital informativo y vitrina comercial dedicada a la difusión de noticias locales, nacionales e internacionales, así como al impulso de emprendedores nuevos y artistas musicales.</p><p>Contacto editorial y comercial: WhatsApp +591 65016029.</p>`;
+      } else if (type === 'privacidad') {
+        titleEl.textContent = "Política de Privacidad";
+        contentEl.innerHTML = `<p>Respetamos tu privacidad. Los datos que ingresas en nuestro generador de mensajes se utilizan exclusivamente para redactar tu consulta hacia nuestro canal oficial de WhatsApp (+591 65016029) sin vender ni ceder información a terceros.</p>`;
+      } else {
+        titleEl.textContent = "Política de Cookies";
+        contentEl.innerHTML = `<p>Esta aplicación web emplea almacenamiento local del navegador (LocalStorage) para recordar tus preferencias y permitir la demostración interactiva de publicaciones editoriales y publicitarias.</p>`;
+      }
+
+      const modal = document.getElementById('legal-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeLegalModal() {
+      const modal = document.getElementById('legal-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function acceptCookies() {
+      localStorage.setItem('alpaso_cookies_ok', 'true');
+      document.getElementById('cookie-banner').classList.add('hidden');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.remove('translate-x-full', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-x-full', 'opacity-0');
+      }, 3200);
+    }
+  </script>
+</body>
+</html>
